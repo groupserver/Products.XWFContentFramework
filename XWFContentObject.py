@@ -47,6 +47,8 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
     
     id_namespace = 'http://iopen.net/namespaces/resources/locator'
     resource_locator = None
+
+    content_container = None
     
     def __init__(self, id, title=None):
         """ Initialise a new instance of XWF Content Object.
@@ -80,7 +82,7 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
                        </data>
                     </xf:instance>
                     %(bind_xml)s
-                    <xf:submission method="urlencoded-post"
+                    <xf:submission method="form-data-post"
                                    id="%(submit_id)s"/>    
                   </xf:model>'''
         
@@ -89,7 +91,7 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
         for obj in (datacont.get_filteredDataDefinition() +
                     datacont.security_management):
             if obj.meta_type == 'XWF Metadata':
-                mid_xml += obj.xform_data(form)
+                mid_xml += obj.xform_data(self, form)
             else:
                 mid_xml += obj.xform_data(datacont, form)
             if obj.required:
@@ -111,7 +113,7 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
             
         xml = ''
         for obj in datacont.get_filteredDataDefinition():
-            xml += '%s\n' % obj.xform_control(model_id)
+            xml += '%s\n' % obj.xform_control(self, model_id)
         
         for obj in datacont.security_management:
             xml += '%s\n' % obj.xform_control(datacont, model_id)
@@ -146,12 +148,13 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
         
         messages = []
         # validate the form
+        content_container = getattr(self.aq_explicit, self.content_container)
         for key in form.keys():
-           for obj in (self.newsitems.get_filteredDataDefinition() +
-                    self.newsitems.security_management):
+           for obj in (content_container.get_filteredDataDefinition() +
+                       content_container.security_management):
                if (getattr(obj, 'indexName', '') == key or
                    getattr(obj, 'id', '') == key):
-                       val, message = obj.validate(form.get(key))
+                       val, message = obj.validate(self, form.get(key))
                        if message:
                            messages.append(message)
                        else:
