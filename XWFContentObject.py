@@ -64,9 +64,13 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
     
     security.declareProtected('View management screens', 'manage_afterAdd')
     def manage_afterAdd(self, item, container):
-        if not item.resource_locator:
-            item.resource_locator = str(item.get_nextId())
-        OrderedFolder.manage_afterAdd(self, item, container)
+        try:
+            if not item.resource_locator:
+                item.resource_locator = str(item.get_nextId())
+        except:
+            pass 
+        # zope 2.9 does this for us... hopefully
+        #OrderedFolder.manage_afterAdd(self, item, container)
         
     security.declarePrivate('view_xform_data')
     def view_xform_data(self, datacont, model_id, submit_id, form):

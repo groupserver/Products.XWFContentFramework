@@ -130,7 +130,7 @@ class XWFDataContainer(OrderedFolder, XWFIdFactoryMixin):
         return True
         
     def manage_afterAdd(self, item, container):
-        OrderedFolder.manage_afterAdd(self, item, container)
+        #OrderedFolder.manage_afterAdd(self, item, container)
         for item in self.data_definition:
             item.setup_catalog(self)
     
@@ -195,8 +195,8 @@ class XWFDataObject(XWFCatalogAware, CustomProperties):
         """ For configuring the object post-instantiation.
 
         """
-        CustomProperties.manage_afterAdd(self, item, container)
-        XWFCatalogAware.manage_afterAdd(self, item, container)
+        #CustomProperties.manage_afterAdd(self, item, container)
+        #XWFCatalogAware.manage_afterAdd(self, item, container)
         
     def manage_beforeDelete(self, item, container):
         """ For cleaning up as we are removed.
