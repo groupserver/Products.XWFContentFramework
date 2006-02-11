@@ -25,18 +25,24 @@ from Products.DataTemplates import XMLTemplate
 from OFS.OrderedFolder import OrderedFolder
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import Item
+from zope.interface import implements
 
 from Products.XWFIdFactory.XWFIdFactoryMixin import XWFIdFactoryMixin
-
+from interfaces import IXWFContentObject
 from AccessControl import Role, getSecurityManager, ClassSecurityInfo
 
 class TransformError(Exception):
     pass
 
+def addedContentObject(obj, event):
+    obj.set_resourceLocator()
+
 class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
+    implements(IXWFContentObject)
+    
     security = ClassSecurityInfo()
     security.declareObjectProtected('View')
-    
+        
     meta_type = "XWF Content Object"
     
     version = 0.1
@@ -62,16 +68,6 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
             
         self.id = id
     
-    security.declareProtected('View management screens', 'manage_afterAdd')
-    def manage_afterAdd(self, item, container):
-        try:
-            if not item.resource_locator:
-                item.resource_locator = str(item.get_nextId())
-        except:
-            pass 
-        # zope 2.9 does this for us... hopefully
-        #OrderedFolder.manage_afterAdd(self, item, container)
-        
     security.declarePrivate('view_xform_data')
     def view_xform_data(self, datacont, model_id, submit_id, form):
         """ XForm data model view.
@@ -130,11 +126,17 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
         
         return xml
         
-    security.declarePrivate('get_resourceLocator')
+    security.declarePublic('get_resourceLocator')
     def get_resourceLocator(self):
         """ """
         return self.resource_locator
-    
+
+    security.declarePrivate('set_resourceLocator')
+    def set_resourceLocator(self, force=False):
+        """ """
+        if not self.resource_locator:
+            self.resource_locator = str(self.get_nextId())
+
     security.declarePublic('processForm')
     def processForm(self, form):
         """ Process an XForms submission.

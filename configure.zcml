@@ -1,0 +1,19 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:five="http://namespaces.zope.org/five">
+    <!-- five:deprecatedManageAddDelete
+           class="Products.XWFContentFramework.XWFDataObject.XWFDataObject" / -->
+    <five:deprecatedManageAddDelete
+           class="Products.XWFContentFramework.XWFDataObject.XWFDataContainer" />
+    <five:deprecatedManageAddDelete
+           class="Products.XWFContentFramework.XWFContentObject.XWFContentObject" />
+    <subscriber
+      for="Products.XWFContentFramework.interfaces.IXWFDataObject
+           zope.app.container.interfaces.IObjectAddedEvent"
+      handler="Products.XWFContentFramework.XWFDataObject.addedDataObject"
+      />
+    <subscriber
+      for="Products.XWFContentFramework.interfaces.IXWFContentObject
+           zope.app.container.interfaces.IObjectAddedEvent"
+      handler="Products.XWFContentFramework.XWFContentObject.addedContentObject"
+      />
+</configure>

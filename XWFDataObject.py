@@ -9,6 +9,11 @@ from Products.XWFCore.XWFCatalogAware import XWFCatalogAware
 from Products.XWFIdFactory.XWFIdFactoryMixin import XWFIdFactoryMixin
 from Products.CustomProperties.CustomProperties import CustomProperties
 from AccessControl import Role, getSecurityManager, ClassSecurityInfo
+from zope.interface import implements
+from interfaces import IXWFDataObject
+
+import logging
+log = logging.getLogger()
 
 class XWFDataContainer(OrderedFolder, XWFIdFactoryMixin):
     security = ClassSecurityInfo()
@@ -133,8 +138,16 @@ class XWFDataContainer(OrderedFolder, XWFIdFactoryMixin):
         #OrderedFolder.manage_afterAdd(self, item, container)
         for item in self.data_definition:
             item.setup_catalog(self)
+
+def addedDataObject(ob, event):
+    """A DataObject was added to the storage.
+
+    """
+    log.info('Added data object')
+    ob.index_object()
     
 class XWFDataObject(XWFCatalogAware, CustomProperties):
+    implements(IXWFDataObject)
     security = ClassSecurityInfo()
     security.declareObjectProtected('View')
     
@@ -191,13 +204,6 @@ class XWFDataObject(XWFCatalogAware, CustomProperties):
     def indexable_summary(self):
         return self.content[:200]
     
-    def manage_afterAdd(self, item, container):
-        """ For configuring the object post-instantiation.
-
-        """
-        #CustomProperties.manage_afterAdd(self, item, container)
-        #XWFCatalogAware.manage_afterAdd(self, item, container)
-        
     def manage_beforeDelete(self, item, container):
         """ For cleaning up as we are removed.
 
