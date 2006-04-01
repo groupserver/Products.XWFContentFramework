@@ -125,17 +125,17 @@ class XWFDataContainer(OrderedFolder, XWFIdFactoryMixin):
         
         # look for any security management requests in the form
         for sec in self.security_management:
-            if kws.has_key(sec.id):
-                vals = kws.get(sec.id)
-                if type(vals) == types.StringType:
-                    vals = [vals]
-                sec.set_permissions(new_object, vals)
-                new_object.reindexObjectSecurity()
+            # it is up to the validation framework to determine if we can
+            # get this far
+            vals = kws.get(sec.id, [])
+            if type(vals) == types.StringType:
+                vals = [vals]
+            sec.set_permissions(new_object, vals)
+            new_object.reindexObjectSecurity()
                 
         return True
         
     def manage_afterAdd(self, item, container):
-        #OrderedFolder.manage_afterAdd(self, item, container)
         for item in self.data_definition:
             item.setup_catalog(self)
 
