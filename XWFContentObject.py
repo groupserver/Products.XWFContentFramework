@@ -73,6 +73,7 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
         """ XForm data model view.
         
         """
+        action = self.REQUEST.URL
         xform = '''<xf:model id="%(model_id)s">
                     <xf:instance>
                        <data>
@@ -83,7 +84,7 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
                     </xf:instance>
                     %(bind_xml)s
                     <xf:submission method="form-data-post"
-                                   id="%(submit_id)s"/>    
+                                   id="%(submit_id)s"'''+' action="%s"' % action+'''/>    
                   </xf:model>'''
         
         mid_xml = ''
