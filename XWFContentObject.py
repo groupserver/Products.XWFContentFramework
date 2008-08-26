@@ -17,11 +17,8 @@
 # You MUST follow the rules in http://iopen.net/STYLE before checking in code
 # to the trunk. Code which does not follow the rules will be rejected.
 #
-import os, Globals
-
 from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.PageTemplates import PageTemplateFile
-from Products.DataTemplates import XMLTemplate
 from OFS.OrderedFolder import OrderedFolder
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import Item
@@ -29,7 +26,7 @@ from zope.interface import implements
 
 from Products.XWFIdFactory.XWFIdFactoryMixin import XWFIdFactoryMixin
 from interfaces import IXWFContentObject
-from AccessControl import Role, getSecurityManager, ClassSecurityInfo
+from AccessControl import Role, ClassSecurityInfo
 
 class TransformError(Exception):
     pass
@@ -157,15 +154,15 @@ class XWFContentObject(OrderedFolder, XWFIdFactoryMixin):
         # validate the form
         content_container = getattr(self.aq_explicit, self.content_container)
         for key in form.keys():
-           for obj in (content_container.get_filteredDataDefinition() +
-                       content_container.security_management):
-               if (getattr(obj, 'indexName', '') == key or
-                   getattr(obj, 'id', '') == key):
-                       val, message = obj.validate(self, form.get(key))
-                       if message:
-                           messages.append(message)
-                       else:
-                           form[key] = val        
+            for obj in (content_container.get_filteredDataDefinition() +
+                        content_container.security_management):
+                if (getattr(obj, 'indexName', '') == key or
+                    getattr(obj, 'id', '') == key):
+                    val, message = obj.validate(self, form.get(key))
+                    if message:
+                        messages.append(message)
+                    else:
+                        form[key] = val        
         if messages:
             message = ''
             for msg in messages:

@@ -3,12 +3,10 @@ import types
 import DateTime
 from OFS.OrderedFolder import OrderedFolder
 
-from Products.XWFMetadata.DC import DCCreator, DCTitle
-from Products.XWFCore.XWFUtils import getToolByName
 from Products.XWFCore.XWFCatalogAware import XWFCatalogAware
 from Products.XWFIdFactory.XWFIdFactoryMixin import XWFIdFactoryMixin
 from Products.CustomProperties.CustomProperties import CustomProperties
-from AccessControl import Role, getSecurityManager, ClassSecurityInfo
+from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from interfaces import IXWFDataObject
 
