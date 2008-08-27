@@ -6,9 +6,12 @@ from OFS.OrderedFolder import OrderedFolder
 from Products.XWFCore.XWFCatalogAware import XWFCatalogAware
 from Products.XWFIdFactory.XWFIdFactoryMixin import XWFIdFactoryMixin
 from Products.CustomProperties.CustomProperties import CustomProperties
+
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from interfaces import IXWFDataObject
+
+from XWFContentObject import XWFContentObject #@UnusedImport - used externally
 
 import logging
 log = logging.getLogger()
