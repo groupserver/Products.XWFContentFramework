@@ -1,1 +1,5 @@
 recursive-include Products *
+recursive-include docs *
+include version.py
+include README.txt
+

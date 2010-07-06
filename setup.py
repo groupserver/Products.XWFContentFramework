@@ -1,7 +1,9 @@
-from setuptools import setup, find_packages
+# coding=utf-8
 import os
+from setuptools import setup, find_packages
+from version import get_version
 
-version = '0.98'
+version = get_version()
 
 setup(name='Products.XWFContentFramework',
       version=version,
